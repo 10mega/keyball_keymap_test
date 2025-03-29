@@ -23,19 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef COMBO_ENABLE
 const uint16_t PROGMEM my_jq[] = {KC_J, KC_Q, COMBO_END};
 const uint16_t PROGMEM my_jk[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM my_kl[] = {KC_K, KC_L, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(my_jq, KC_QUES),
     COMBO(my_jk, KC_BTN1),
+    COMBO(my_kl, KC_EXLM),
 };
 #endif
 
-enum {
-    TD_F_ENG,
-    TD_J_JPN,
-};
 
-// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // keymap for default (VIA)
   [0] = LAYOUT_universal(
