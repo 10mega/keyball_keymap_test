@@ -30,6 +30,22 @@ combo_t key_combos[] = {
 };
 #endif
 
+enum {
+    TD_F_ENG,
+    TD_J_JPN,
+};
+
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_F_ENG] = ACTION_TAP_DANCE_DOUBLE(KC_F, KC_LNG2),
+    [TD_J_JPN] = ACTION_TAP_DANCE_DOUBLE(KC_J, KC_LNG1),
+};
+
+#undef KC_F
+#define KC_F TD(TD_F_ENG)
+#undef KC_J 
+#define KC_J TD(TD_J_JPN)
+
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // keymap for default (VIA)
