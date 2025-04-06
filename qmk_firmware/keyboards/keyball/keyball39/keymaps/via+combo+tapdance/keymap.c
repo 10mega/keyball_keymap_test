@@ -20,6 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+// タップダンスの定義
+enum {
+    TD_F_ENG,
+    TD_J_JPN,
+    TD_Q_TAB,
+};
+
 // タップダンスの状態を管理する構造体
 typedef struct {
     bool is_press_action;
@@ -41,7 +48,7 @@ enum {
 static tap dance_state[3];
 
 // タップダンスの状態を返す関数
-uint8_t dance_step(qk_tap_dance_state_t *state) {
+uint8_t dance_step(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed) return SINGLE_TAP;
         else return SINGLE_HOLD;
@@ -54,7 +61,7 @@ uint8_t dance_step(qk_tap_dance_state_t *state) {
 }
 
 // Fキーのタップダンス処理
-void on_dance_f(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_f(tap_dance_state_t *state, void *user_data) {
     dance_state[TD_F_ENG].state = dance_step(state);
     switch (dance_state[TD_F_ENG].state) {
         case SINGLE_TAP: register_code(KC_F); break;
@@ -63,7 +70,7 @@ void on_dance_f(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void on_dance_f_reset(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_f_reset(tap_dance_state_t *state, void *user_data) {
     switch (dance_state[TD_F_ENG].state) {
         case SINGLE_TAP: unregister_code(KC_F); break;
         case SINGLE_HOLD: layer_off(1); break;
@@ -73,7 +80,7 @@ void on_dance_f_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // Jキーのタップダンス処理
-void on_dance_j(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_j(tap_dance_state_t *state, void *user_data) {
     dance_state[TD_J_JPN].state = dance_step(state);
     switch (dance_state[TD_J_JPN].state) {
         case SINGLE_TAP: register_code(KC_J); break;
@@ -82,7 +89,7 @@ void on_dance_j(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void on_dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_j_reset(tap_dance_state_t *state, void *user_data) {
     switch (dance_state[TD_J_JPN].state) {
         case SINGLE_TAP: unregister_code(KC_J); break;
         case SINGLE_HOLD: layer_off(2); break;
@@ -92,31 +99,26 @@ void on_dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // Qキーのタップダンス処理
-void on_dance_q(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_q(tap_dance_state_t *state, void *user_data) {
     dance_state[TD_Q_TAB].state = dance_step(state);
     switch (dance_state[TD_Q_TAB].state) {
         case SINGLE_TAP: register_code(KC_Q); break;
+        case SINGLE_HOLD: register_code(KC_Q); break;
         case DOUBLE_TAP: tap_code(KC_TAB); break;
     }
 }
 
-void on_dance_q_reset(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_q_reset(tap_dance_state_t *state, void *user_data) {
     switch (dance_state[TD_Q_TAB].state) {
         case SINGLE_TAP: unregister_code(KC_Q); break;
+        case SINGLE_HOLD: unregister_code(KC_Q); break;
         case DOUBLE_TAP: break;
     }
     dance_state[TD_Q_TAB].state = 0;
 }
 
-// タップダンスの定義
-enum {
-    TD_F_ENG,
-    TD_J_JPN,
-    TD_Q_TAB,
-};
-
 // タップダンスアクションの定義
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
     [TD_F_ENG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_f, on_dance_f_reset),
     [TD_J_JPN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_j, on_dance_j_reset),
     [TD_Q_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_q, on_dance_q_reset),
