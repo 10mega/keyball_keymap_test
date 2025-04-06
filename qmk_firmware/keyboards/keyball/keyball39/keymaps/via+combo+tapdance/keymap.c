@@ -20,6 +20,108 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+// タップダンスの状態を管理する構造体
+typedef struct {
+    bool is_press_action;
+    uint8_t state;
+} tap;
+
+// タップダンスの状態を定義
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD = 2,
+    DOUBLE_TAP = 3,
+    DOUBLE_HOLD = 4,
+    DOUBLE_SINGLE_TAP = 5,
+    TRIPLE_TAP = 6,
+    TRIPLE_HOLD = 7
+};
+
+// タップダンスの状態を格納する変数
+static tap dance_state[3];
+
+// タップダンスの状態を返す関数
+uint8_t dance_step(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted) return DOUBLE_SINGLE_TAP;
+        else if (state->pressed) return DOUBLE_HOLD;
+        else return DOUBLE_TAP;
+    }
+    return MORE_TAPS;
+}
+
+// Fキーのタップダンス処理
+void on_dance_f(qk_tap_dance_state_t *state, void *user_data) {
+    dance_state[TD_F_ENG].state = dance_step(state);
+    switch (dance_state[TD_F_ENG].state) {
+        case SINGLE_TAP: register_code(KC_F); break;
+        case SINGLE_HOLD: layer_on(1); break;
+        case DOUBLE_TAP: tap_code(KC_F); tap_code16(KC_LNG2); break;
+    }
+}
+
+void on_dance_f_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_state[TD_F_ENG].state) {
+        case SINGLE_TAP: unregister_code(KC_F); break;
+        case SINGLE_HOLD: layer_off(1); break;
+        case DOUBLE_TAP: break;
+    }
+    dance_state[TD_F_ENG].state = 0;
+}
+
+// Jキーのタップダンス処理
+void on_dance_j(qk_tap_dance_state_t *state, void *user_data) {
+    dance_state[TD_J_JPN].state = dance_step(state);
+    switch (dance_state[TD_J_JPN].state) {
+        case SINGLE_TAP: register_code(KC_J); break;
+        case SINGLE_HOLD: layer_on(2); break;
+        case DOUBLE_TAP: tap_code(KC_J); tap_code16(KC_LNG1); break;
+    }
+}
+
+void on_dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_state[TD_J_JPN].state) {
+        case SINGLE_TAP: unregister_code(KC_J); break;
+        case SINGLE_HOLD: layer_off(2); break;
+        case DOUBLE_TAP: break;
+    }
+    dance_state[TD_J_JPN].state = 0;
+}
+
+// Qキーのタップダンス処理
+void on_dance_q(qk_tap_dance_state_t *state, void *user_data) {
+    dance_state[TD_Q_TAB].state = dance_step(state);
+    switch (dance_state[TD_Q_TAB].state) {
+        case SINGLE_TAP: register_code(KC_Q); break;
+        case DOUBLE_TAP: tap_code(KC_TAB); break;
+    }
+}
+
+void on_dance_q_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_state[TD_Q_TAB].state) {
+        case SINGLE_TAP: unregister_code(KC_Q); break;
+        case DOUBLE_TAP: break;
+    }
+    dance_state[TD_Q_TAB].state = 0;
+}
+
+// タップダンスの定義
+enum {
+    TD_F_ENG,
+    TD_J_JPN,
+    TD_Q_TAB,
+};
+
+// タップダンスアクションの定義
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_F_ENG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_f, on_dance_f_reset),
+    [TD_J_JPN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_j, on_dance_j_reset),
+    [TD_Q_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_q, on_dance_q_reset),
+};
+
 #ifdef COMBO_ENABLE
 const uint16_t PROGMEM my_mcomma[] = {KC_M, KC_COMM, COMBO_END};
 const uint16_t PROGMEM my_jk[] = {KC_J, KC_K, COMBO_END};
@@ -36,35 +138,14 @@ combo_t key_combos[] = {
 };
 #endif
 
-// Existing tap dance action definitions (kept as is)
-enum {
-    TD_F_ENG,
-    TD_J_JPN,
-    TD_Q_TAB,
-};
-
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_F_ENG] = ACTION_TAP_DANCE_LAYER_MOVE(KC_F, 1),
-    [TD_J_JPN] = ACTION_TAP_DANCE_LAYER_MOVE(KC_J, 1),
-    [TD_Q_TAB] = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_TAB),
-};
-
-#undef KC_F
-#define KC_F TD(TD_F_ENG)
-#undef KC_J
-#define KC_J TD(TD_J_JPN)
-#undef KC_Q
-#define KC_Q TD(TD_Q_TAB)
-
-
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // keymap for default (VIA)
   [0] = LAYOUT_universal(
-    TD(TD_Q_TAB), KC_W, KC_E, KC_R, KC_T,                            KC_Y, KC_U, KC_I, KC_O, KC_P,
-    KC_A, KC_S, KC_D, TD(TD_F_ENG), KC_G,                            KC_H, TD(TD_J_JPN), KC_K, KC_L, KC_MINS,
-    KC_Z, KC_X, KC_C, KC_V, KC_B,                                     KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,
-    KC_LCTL, KC_LGUI, KC_LALT, LSFT_T(KC_LNG2), LT(1,KC_SPC), LT(3,KC_LNG1), KC_BSPC, LT(2,KC_ENT), LSFT_T(KC_LNG2), KC_RALT, KC_RGUI, KC_RSFT
+    TD(TD_Q_TAB), KC_W, KC_E, KC_R, KC_T,                                    KC_Y, KC_U, KC_I, KC_O, KC_P,
+    LCTL_T(KC_A), KC_S, KC_D, TD(TD_F_ENG), KC_G,                            LT(4, KC_H), TD(TD_J_JPN), KC_K, LT(3, KC_L), KC_MINS,
+    LSFT_T(KC_Z), KC_X, KC_C, LT(2, KC_V), KC_B,                             KC_N, LT(2, KC_M), KC_COMM, KC_DOT, LSFT_T(KC_SLSH),
+    KC_LSFT, KC_LGUI, KC_LALT, LALT_T(KC_TAB), KC_LGUI, LT(1, KC_SPC),       LGUI_T(KC_ENT), LT(1, KC_BSPC), _______, _______, _______, LSFT_T(KC_BSLS)
   ),
 
   [1] = LAYOUT_universal(
