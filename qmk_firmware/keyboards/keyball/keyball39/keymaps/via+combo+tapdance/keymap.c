@@ -41,7 +41,8 @@ enum {
     DOUBLE_HOLD = 4,
     DOUBLE_SINGLE_TAP = 5,
     TRIPLE_TAP = 6,
-    TRIPLE_HOLD = 7
+    TRIPLE_HOLD = 7,
+    MORE_TAPS = 8
 };
 
 // タップダンスの状態を格納する変数
