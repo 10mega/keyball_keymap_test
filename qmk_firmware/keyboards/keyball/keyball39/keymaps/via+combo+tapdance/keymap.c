@@ -21,13 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 
 #ifdef COMBO_ENABLE
-// Existing combo definitions (kept as is)
-const uint16_t PROGMEM my_jq[] = {KC_J, KC_Q, COMBO_END};
+const uint16_t PROGMEM my_mcomma[] = {KC_M, KC_COMM, COMBO_END};
 const uint16_t PROGMEM my_jk[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM my_comma_dot[] = {KC_COMM, KC_DOT, COMBO_END};
+const uint16_t PROGMEM my_kl[] = {KC_K, KC_L, COMBO_END};
+const uint16_t PROGMEM my_qwdot[] = {KC_Q, KC_W, KC_DOT, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(my_jq, KC_QUES),
+    COMBO(my_mcomma, KC_BTN1),
     COMBO(my_jk, KC_BTN1),
+    COMBO(my_comma_dot, KC_BTN2),
+    COMBO(my_kl, KC_BTN2),
+    COMBO(my_qwdot, KC_ESC),
 };
 #endif
 
@@ -35,18 +40,21 @@ combo_t key_combos[] = {
 enum {
     TD_F_ENG,
     TD_J_JPN,
+    TD_Q_TAB,
 };
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_F_ENG] = ACTION_TAP_DANCE_DOUBLE(KC_F, KC_LNG2),
-    [TD_J_JPN] = ACTION_TAP_DANCE_DOUBLE(KC_J, KC_LNG1),
+    [TD_F_ENG] = ACTION_TAP_DANCE_LAYER_MOVE(KC_F, 1),
+    [TD_J_JPN] = ACTION_TAP_DANCE_LAYER_MOVE(KC_J, 1),
+    [TD_Q_TAB] = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_TAB),
 };
 
-// Commented out tap dance keycode redefinitions to prioritize LT() in layout
-// #undef KC_F
-// #define KC_F TD(TD_F_ENG)
-// #undef KC_J
-// #define KC_J TD(TD_J_JPN)
+#undef KC_F
+#define KC_F TD(TD_F_ENG)
+#undef KC_J
+#define KC_J TD(TD_J_JPN)
+#undef KC_Q
+#define KC_Q TD(TD_Q_TAB)
 
 
 // clang-format off

@@ -29,3 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
+
+// 容量削減のための設定
+#undef RGBLIGHT_ENABLE
+#undef RGB_MATRIX_ENABLE
+#undef RGB_MATRIX_ANIMATIONS
+#undef RGB_MATRIX_FRAMEBUFFER_EFFECTS
+#undef RGB_MATRIX_KEYPRESSES
+#undef RGB_MATRIX_KEYRELEASES
+
+// OLED設定
+#define OLED_UPDATE_INTERVAL 50
+#define OLED_BRIGHTNESS 128
