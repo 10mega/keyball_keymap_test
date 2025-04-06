@@ -66,7 +66,7 @@ void on_dance_f(tap_dance_state_t *state, void *user_data) {
     dance_state[TD_F_ENG].state = dance_step(state);
     switch (dance_state[TD_F_ENG].state) {
         case SINGLE_TAP: register_code(KC_F); break;
-        case SINGLE_HOLD: layer_fjon(2); break;
+        case SINGLE_HOLD: layer_on(2); break;
         case DOUBLE_TAP: tap_code(KC_F); tap_code16(KC_LNG2); break;
     }
 }
