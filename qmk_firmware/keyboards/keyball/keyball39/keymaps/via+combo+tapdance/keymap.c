@@ -66,7 +66,7 @@ void on_dance_f(tap_dance_state_t *state, void *user_data) {
     dance_state[TD_F_ENG].state = dance_step(state);
     switch (dance_state[TD_F_ENG].state) {
         case SINGLE_TAP: register_code(KC_F); break;
-        case SINGLE_HOLD: layer_on(1); break;
+        case SINGLE_HOLD: layer_fjon(2); break;
         case DOUBLE_TAP: tap_code(KC_F); tap_code16(KC_LNG2); break;
     }
 }
@@ -127,17 +127,19 @@ tap_dance_action_t tap_dance_actions[] = {
 
 #ifdef COMBO_ENABLE
 const uint16_t PROGMEM my_mcomma[] = {KC_M, KC_COMM, COMBO_END};
-const uint16_t PROGMEM my_jk[] = {KC_J, KC_K, COMBO_END};
+// const uint16_t PROGMEM my_jk[] = {KC_J, KC_K, COMBO_END};
 const uint16_t PROGMEM my_comma_dot[] = {KC_COMM, KC_DOT, COMBO_END};
 const uint16_t PROGMEM my_kl[] = {KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM my_qwdot[] = {KC_Q, KC_W, KC_DOT, COMBO_END};
+const uint16_t PROGMEM my_qw[] = {TD(TD_Q_TAB), KC_W, COMBO_END};
+const uint16_t PROGMEM my_tdjk[] = {TD(TD_J_JPN), KC_K, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(my_mcomma, KC_BTN1),
-    COMBO(my_jk, KC_BTN1),
+    // COMBO(my_jk, KC_BTN1),
     COMBO(my_comma_dot, KC_BTN2),
     COMBO(my_kl, KC_BTN2),
-    COMBO(my_qwdot, KC_ESC),
+    COMBO(my_qw, KC_ESC),
+    COMBO(my_tdjk, KC_BTN1),
 };
 #endif
 
@@ -176,8 +178,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // Existing layer state change function (kept as is)
 layer_state_t layer_state_set_user(layer_state_t state) {
-    // Auto enable scroll mode when the highest layer is 3? PDF doesn't show scroll mode keys. Adjust if needed.
-    // keyball_set_scroll_mode(get_highest_layer(state) == 3);
+    // Auto enable scroll mode when the highest layer is 3
+    keyball_set_scroll_mode(get_highest_layer(state) == 3);
     return state;
 }
 
