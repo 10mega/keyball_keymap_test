@@ -74,7 +74,7 @@ void on_dance_f(tap_dance_state_t *state, void *user_data) {
 void on_dance_f_reset(tap_dance_state_t *state, void *user_data) {
     switch (dance_state[TD_F_ENG].state) {
         case SINGLE_TAP: unregister_code(KC_F); break;
-        case SINGLE_HOLD: layer_off(1); break;
+        case SINGLE_HOLD: layer_off(2); break;
         case DOUBLE_TAP: break;
     }
     dance_state[TD_F_ENG].state = 0;
