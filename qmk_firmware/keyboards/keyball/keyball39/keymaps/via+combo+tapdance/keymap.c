@@ -128,8 +128,7 @@ void on_dance_q_reset(tap_dance_state_t *state, void *user_data) {
 
 // --- タップダンスアクションの登録 ---
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_F_ENG] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, on_dance_f, on_dance_f_reset, 150), // TAPPING_TERM を個別指定する場合
-    // [TD_F_ENG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_f, on_dance_f_reset), // グローバル TAPPING_TERM を使う場合
+    [TD_F_ENG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_f, on_dance_f_reset), // グローバル TAPPING_TERM を使う場合
     [TD_J_JPN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_j, on_dance_j_reset),
     [TD_Q_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, on_dance_q, on_dance_q_reset),
 };
