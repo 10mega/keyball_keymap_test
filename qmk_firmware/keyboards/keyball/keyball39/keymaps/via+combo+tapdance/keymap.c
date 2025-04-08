@@ -67,7 +67,7 @@ void on_dance_f(tap_dance_state_t *state, void *user_data) {
     switch (dance_state[TD_F_ENG].state) {
         case SINGLE_TAP: register_code(KC_F); break;
         case SINGLE_HOLD: layer_on(2); break;
-        case DOUBLE_TAP: tap_code(KC_F); tap_code16(KC_LNG2); break;
+        case DOUBLE_TAP: tap_code16(KC_LNG2); break;
     }
 }
 
@@ -86,7 +86,7 @@ void on_dance_j(tap_dance_state_t *state, void *user_data) {
     switch (dance_state[TD_J_JPN].state) {
         case SINGLE_TAP: register_code(KC_J); break;
         case SINGLE_HOLD: layer_on(2); break;
-        case DOUBLE_TAP: tap_code(KC_J); tap_code16(KC_LNG1); break;
+        case DOUBLE_TAP: tap_code16(KC_LNG1); break;
     }
 }
 
@@ -148,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // keymap for default (VIA)
   [0] = LAYOUT_universal(
     TD(TD_Q_TAB), KC_W, KC_E, KC_R, KC_T,                                    KC_Y, KC_U, KC_I, KC_O, KC_P,
-    LCTL_T(KC_A), KC_S, KC_D, TD(TD_F_ENG), KC_G,                            LT(4, KC_H), TD(TD_J_JPN), KC_K, LT(3, KC_L), KC_MINS,
+    LCTL_T(KC_A), KC_S, KC_D, TD(TD_F_ENG), LT(4, KC_G),                            LT(4, KC_H), TD(TD_J_JPN), KC_K, LT(3, KC_L), KC_MINS,
     LSFT_T(KC_Z), KC_X, KC_C, LT(2, KC_V), KC_B,                             KC_N, LT(2, KC_M), KC_COMM, KC_DOT, LSFT_T(KC_SLSH),
     KC_LSFT, KC_LGUI, KC_LALT, LALT_T(KC_TAB), KC_LGUI, LT(1, KC_SPC),       LGUI_T(KC_ENT), LT(1, KC_BSPC), _______, _______, _______, LSFT_T(KC_BSLS)
   ),
