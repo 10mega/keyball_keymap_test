@@ -45,4 +45,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // タップダンスの設定
 #define TAPPING_TERM 150  // タップ判定時間を150msに設定
 #define PERMISSIVE_HOLD  // ホールドの判定を早くする
-#define IGNORE_MOD_TAP_INTERRUPT  // モッドタップの割り込みを無視
